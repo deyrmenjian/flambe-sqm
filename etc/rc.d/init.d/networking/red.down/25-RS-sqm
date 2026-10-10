@@ -1,0 +1,4 @@
+#!/bin/sh
+# Tear down SQM when RED goes down.
+[ -x /usr/local/bin/sqmctrl ] || exit 0
+/usr/local/bin/sqmctrl stop

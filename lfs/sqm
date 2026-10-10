@@ -1,0 +1,82 @@
+###############################################################################
+#                                                                             #
+# IPFire.org - A linux based firewall                                         #
+# SQM addon — installs sqm-scripts plus IPFire glue                           #
+#                                                                             #
+###############################################################################
+
+SUMMARY    = Smart Queue Management (sqm-scripts)
+
+VER        = 1.0.0
+
+THISAPP    = sqm-$(VER)
+DL_FILE    =
+DL_FROM    =
+DIR_APP    = $(DIR_SRC)/$(THISAPP)
+TARGET     = $(DIR_INFO)/$(THISAPP)
+PROG       = sqm
+PAK_VER    = 1
+
+DEPS       =
+
+SERVICES   = sqm
+
+# In-tree overlay; copy from the IPFire source tree (this addon merged in).
+SQM_TREE   = $(BASEDIR)
+
+help:
+	@echo "$$(BOLD)$(THISAPP)$$(NORM)"
+	@echo "  $(SUMMARY)"
+
+$(TARGET) :
+	@$(PREBUILD)
+	@rm -rf $(DIR_APP)
+	mkdir -p $(DIR_APP)
+
+	install -v -d $(BUILD_ROOT)/etc/sqm
+	install -v -d $(BUILD_ROOT)/etc/rc.d/init.d/networking/red.up
+	install -v -d $(BUILD_ROOT)/etc/rc.d/init.d/networking/red.down
+	install -v -d $(BUILD_ROOT)/usr/lib/sqm
+	install -v -d $(BUILD_ROOT)/usr/local/bin
+	install -v -d $(BUILD_ROOT)/var/ipfire/sqm
+	install -v -d $(BUILD_ROOT)/srv/web/ipfire/cgi-bin
+	install -v -d $(BUILD_ROOT)/var/ipfire/addon-lang
+
+	install -v -m 644 $(SQM_TREE)/etc/sqm/sqm.conf $(BUILD_ROOT)/etc/sqm/sqm.conf
+	install -v -m 644 $(SQM_TREE)/etc/sqm/default.conf $(BUILD_ROOT)/etc/sqm/default.conf
+
+	install -v -m 644 $(SQM_TREE)/usr/lib/sqm/*.sh $(BUILD_ROOT)/usr/lib/sqm/
+	install -v -m 644 $(SQM_TREE)/usr/lib/sqm/*.qos $(BUILD_ROOT)/usr/lib/sqm/
+	install -v -m 644 $(SQM_TREE)/usr/lib/sqm/*.help $(BUILD_ROOT)/usr/lib/sqm/
+	install -v -m 644 $(SQM_TREE)/usr/lib/sqm/VERSION $(BUILD_ROOT)/usr/lib/sqm/VERSION
+	install -v -m 755 $(SQM_TREE)/usr/lib/sqm/sqmctrl.sh $(BUILD_ROOT)/usr/lib/sqm/sqmctrl.sh
+	install -v -m 755 $(SQM_TREE)/usr/lib/sqm/start-sqm $(BUILD_ROOT)/usr/lib/sqm/start-sqm
+	install -v -m 755 $(SQM_TREE)/usr/lib/sqm/stop-sqm $(BUILD_ROOT)/usr/lib/sqm/stop-sqm
+	install -v -m 755 $(SQM_TREE)/usr/lib/sqm/update-available-qdiscs \
+		$(BUILD_ROOT)/usr/lib/sqm/update-available-qdiscs
+
+	install -v -m 755 $(SQM_TREE)/usr/local/bin/sqmctrl $(BUILD_ROOT)/usr/local/bin/sqmctrl
+	chown root:nobody $(BUILD_ROOT)/usr/local/bin/sqmctrl
+	chmod 4750 $(BUILD_ROOT)/usr/local/bin/sqmctrl
+	install -v -m 754 $(SQM_TREE)/etc/rc.d/init.d/sqm $(BUILD_ROOT)/etc/rc.d/init.d/sqm
+	install -v -m 754 $(SQM_TREE)/etc/rc.d/init.d/networking/red.up/25-RS-sqm \
+		$(BUILD_ROOT)/etc/rc.d/init.d/networking/red.up/25-RS-sqm
+	install -v -m 754 $(SQM_TREE)/etc/rc.d/init.d/networking/red.down/25-RS-sqm \
+		$(BUILD_ROOT)/etc/rc.d/init.d/networking/red.down/25-RS-sqm
+
+	install -v -m 755 $(SQM_TREE)/html/cgi-bin/sqm.cgi \
+		$(BUILD_ROOT)/srv/web/ipfire/cgi-bin/sqm.cgi
+	install -v -m 644 $(SQM_TREE)/langs/en/cgi-bin/sqm.en.pl \
+		$(BUILD_ROOT)/var/ipfire/addon-lang/sqm.en.pl
+	install -v -m 644 $(SQM_TREE)/var/ipfire/menu.d/41-sqm.menu \
+		$(BUILD_ROOT)/var/ipfire/menu.d/41-sqm.menu
+	install -v -m 644 $(SQM_TREE)/var/ipfire/sqm/settings \
+		$(BUILD_ROOT)/var/ipfire/sqm/settings
+
+	@if [ -e "$(BUILD_ROOT)/etc/init.d" ]; then \
+		ln -sfn ../rc.d/init.d/sqm $(BUILD_ROOT)/etc/init.d/sqm ; \
+	fi
+
+	@$(call FILELIST_MK, $(PROG))
+	@$(call install_pak)
+	@$(CLEANUP)

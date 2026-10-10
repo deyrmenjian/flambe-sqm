@@ -1,0 +1,4 @@
+#!/bin/sh
+# Apply SQM when RED comes up (after 24-RS-qos).
+[ -x /usr/local/bin/sqmctrl ] || exit 0
+/usr/local/bin/sqmctrl start

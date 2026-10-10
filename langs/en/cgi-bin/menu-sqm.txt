@@ -1,0 +1,9 @@
+The WUI menu is assembled from every /var/ipfire/menu.d/*.menu file
+(header.pl evals them in glob order).
+
+This overlay installs var/ipfire/menu.d/41-sqm.menu, which adds SQM under
+Services immediately after Quality of Service (sort key 55.sqm vs 50.qos).
+
+It does not patch 40-services.menu, so a core update that replaces stock
+menu files will not wipe the SQM entry unless it also deletes extra files
+in menu.d.

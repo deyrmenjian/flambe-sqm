@@ -1,0 +1,9 @@
+This overlay is licensed under the GNU General Public License, version 2.
+
+The files under usr/lib/sqm/ from sqm-scripts (https://github.com/tohojo/sqm-scripts)
+are Copyright (C) 2012-2019 Michael D. Taht, Toke Høiland-Jørgensen, Sebastian
+Moeller, Eric Luehrsen and other contributors, GPL-2.0.
+
+IPFire glue (sqmctrl, ipfire.sh, sqm.cgi, init scripts) is GPL-2.0 as well.
+
+See https://www.gnu.org/licenses/old-licenses/gpl-2.0.html

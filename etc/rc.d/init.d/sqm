@@ -1,0 +1,37 @@
+#!/bin/sh
+########################################################################
+# Begin sqm
+#
+# Description : Smart Queue Management (OpenWrt sqm-scripts)
+#
+########################################################################
+
+. /etc/sysconfig/rc
+. ${rc_functions}
+
+case "${1}" in
+	start)
+		boot_mesg "Starting SQM..."
+		/usr/local/bin/sqmctrl start
+		evaluate_retval
+		;;
+	stop)
+		boot_mesg "Stopping SQM..."
+		/usr/local/bin/sqmctrl stop
+		evaluate_retval
+		;;
+	restart)
+		${0} stop
+		sleep 1
+		${0} start
+		;;
+	status)
+		/usr/local/bin/sqmctrl status
+		;;
+	*)
+		echo "Usage: ${0} {start|stop|restart|status}"
+		exit 1
+		;;
+esac
+
+# End sqm

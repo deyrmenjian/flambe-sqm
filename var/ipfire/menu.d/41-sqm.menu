@@ -1,0 +1,6 @@
+    $subservices->{'55.sqm'} = {
+				'caption' => 'SQM',
+				'uri' => '/cgi-bin/sqm.cgi',
+				'title' => 'Smart Queue Management',
+				'enabled' => 1,
+				};
